@@ -1,0 +1,99 @@
+name: 🐛 Bug Report
+description: Reporte um bug ou comportamento inesperado no ewallet-app
+title: "[bug] "
+labels: ["type: bug", "status: in-progress"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Obrigado por reportar! Preencha os campos abaixo para nos ajudar a reproduzir e corrigir o problema.
+
+  - type: dropdown
+    id: screen
+    attributes:
+      label: Tela afetada
+      description: Em qual tela o bug ocorre?
+      options:
+        - Home (saldo e ações rápidas)
+        - Send (envio de valor)
+        - Receive (QR code / endereço)
+        - History (histórico de transações)
+        - Profile (perfil e configurações)
+        - Notifications (notificações)
+        - Navegação / BottomNavBar
+        - Outro
+    validations:
+      required: true
+
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Plataforma
+      description: Em qual plataforma o bug foi encontrado?
+      multiple: true
+      options:
+        - Android (dispositivo físico)
+        - Android (emulador)
+        - iOS (dispositivo físico)
+        - iOS (simulador)
+        - Web
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Descrição do bug
+      description: Descreva o que acontece de forma clara e objetiva.
+      placeholder: "Ex: Ao tocar no botão 'Enviar', o app trava e exibe tela branca."
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Passos para reproduzir
+      description: Liste os passos para reproduzir o comportamento.
+      placeholder: |
+        1. Abra o app
+        2. Navegue para a tela 'Send'
+        3. Digite um valor
+        4. Toque em 'Confirmar'
+        5. Observe o erro
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Comportamento esperado
+      placeholder: "O app deveria navegar para a tela de confirmação."
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Comportamento atual
+      placeholder: "O app exibe tela branca e congela."
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs / Stack trace
+      description: Cole aqui qualquer erro do console ou stack trace relevante.
+      render: text
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Prioridade
+      options:
+        - "priority: critical (app inutilizável)"
+        - "priority: high (funcionalidade principal quebrada)"
+        - "priority: medium (workaround possível)"
+        - "priority: low (cosmético ou raramente ocorre)"
+    validations:
+      required: true

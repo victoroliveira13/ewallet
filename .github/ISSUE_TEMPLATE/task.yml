@@ -1,0 +1,63 @@
+name: 🔧 Task / Chore
+description: Tarefa técnica, refatoração, atualização de dependências ou melhoria de infraestrutura
+title: "[task] "
+labels: ["type: chore"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use este template para tarefas técnicas que não são bugs nem features visíveis ao usuário.
+
+  - type: dropdown
+    id: type
+    attributes:
+      label: Tipo de tarefa
+      options:
+        - Refatoração de código
+        - Atualização de dependências
+        - Melhoria de performance
+        - Configuração de CI/CD
+        - Documentação técnica
+        - Migração / upgrade de versão
+        - Testes (adicionar/corrigir)
+        - Outro
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Descrição da tarefa
+      description: O que precisa ser feito e por quê?
+      placeholder: "Atualizar NativeWind para v5 para aproveitar melhorias de performance e suporte ao React 19."
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Critérios de aceitação
+      description: Como saberemos que a tarefa foi concluída com sucesso?
+      placeholder: |
+        - [ ] Dependência atualizada para a versão X
+        - [ ] Nenhum erro de TypeScript (`tsc --noEmit` passa)
+        - [ ] App funciona normalmente em Android e iOS
+    validations:
+      required: true
+
+  - type: textarea
+    id: risks
+    attributes:
+      label: Riscos ou breaking changes
+      description: (Opcional) Há riscos de regressão ou breaking changes conhecidos?
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Prioridade
+      options:
+        - "priority: high"
+        - "priority: medium"
+        - "priority: low"
+    validations:
+      required: true

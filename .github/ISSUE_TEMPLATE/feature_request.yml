@@ -1,0 +1,71 @@
+name: ✨ Feature Request
+description: Proponha uma nova funcionalidade ou melhoria para o ewallet-app
+title: "[feat] "
+labels: ["type: feature"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use este template para propor novas funcionalidades. Seja específico — quanto mais contexto, melhor.
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Área da feature
+      description: Qual parte do app essa feature afeta?
+      options:
+        - Home (saldo e ações rápidas)
+        - Send (envio de valor)
+        - Receive (QR code / endereço)
+        - History (histórico de transações)
+        - Profile (perfil e configurações)
+        - Notifications (notificações)
+        - Navegação / UX global
+        - Infraestrutura / API
+        - Nova tela / seção
+        - Outro
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Qual problema esta feature resolve?
+      description: Descreva a situação atual e a limitação ou dor que você enfrenta.
+      placeholder: "Atualmente não consigo filtrar as transações por data, o que dificulta encontrar pagamentos antigos."
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Solução proposta
+      description: Descreva como você imagina que a feature deveria funcionar.
+      placeholder: |
+        Adicionar um filtro de data na tela History com seletor de período (hoje, últimos 7 dias, mês atual, período personalizado).
+        Ao selecionar um período, a lista é filtrada automaticamente.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternativas consideradas
+      description: (Opcional) Você considerou outras abordagens? Por que as descartou?
+
+  - type: textarea
+    id: mockup
+    attributes:
+      label: Mockup / Referência visual
+      description: (Opcional) Adicione screenshots, links ou descrição de UI que ajudem a visualizar a feature.
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Prioridade sugerida
+      options:
+        - "priority: high (core do produto)"
+        - "priority: medium (melhoria importante)"
+        - "priority: low (nice-to-have)"
+    validations:
+      required: true
