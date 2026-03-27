@@ -50,12 +50,15 @@ jobs:
         id: bump
         run: |
           LATEST_TAG=${{ steps.latest_tag.outputs.tag }}
-          CURRENT_VERSION=$(echo $LATEST_TAG | sed 's/^v//')
 
-          # Pega commits desde a última tag
+          # Se não há tag anterior, usa a versão do package.json como base
           if [ "$LATEST_TAG" = "v0.0.0" ]; then
+            PKG_VERSION=$(node -p "require('./package.json').version")
+            CURRENT_VERSION="$PKG_VERSION"
+            echo "Nenhuma tag encontrada — usando versão do package.json: $CURRENT_VERSION"
             COMMITS=$(git log --pretty=format:"%s" --no-merges)
           else
+            CURRENT_VERSION=$(echo $LATEST_TAG | sed 's/^v//')
             COMMITS=$(git log ${LATEST_TAG}..HEAD --pretty=format:"%s" --no-merges)
           fi
 
