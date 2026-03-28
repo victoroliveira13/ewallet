@@ -49,4 +49,5 @@ yarn-error.*
 coverage/
 
 # Misc
-.vscode/
+.vscode/*
+!.vscode/settings.json

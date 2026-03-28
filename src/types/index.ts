@@ -3,8 +3,8 @@ export interface Transaction {
   title: string;
   subtitle: string;
   amount: number;
-  type: "credit" | "debit";
-  category: "shopping" | "food" | "transport" | "entertainment" | "transfer" | "salary";
+  type: 'credit' | 'debit';
+  category: 'shopping' | 'food' | 'transport' | 'entertainment' | 'transfer' | 'salary';
   date: string;
   icon: string;
 }
@@ -24,7 +24,7 @@ export interface Notification {
   message: string;
   time: string;
   read: boolean;
-  type: "transfer" | "info" | "alert";
+  type: 'transfer' | 'info' | 'alert';
 }
 
 export interface User {

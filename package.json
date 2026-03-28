@@ -8,7 +8,20 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "prepare": "husky"
+    "prepare": "husky",
+    "lint": "eslint \"src/**/*.{ts,tsx}\" \"App.tsx\"",
+    "lint:fix": "eslint \"src/**/*.{ts,tsx}\" \"App.tsx\" --fix",
+    "format": "prettier --write \"src/**/*.{ts,tsx}\" \"App.tsx\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx}\" \"App.tsx\""
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md}": [
+      "prettier --write"
+    ]
   },
   "dependencies": {
     "expo": "~54.0.0",
@@ -34,7 +47,15 @@
     "@commitlint/config-conventional": "^20.5.0",
     "@types/react": "~19.1.10",
     "@types/react-native": "~0.73.0",
+    "@typescript-eslint/eslint-plugin": "^8.57.2",
+    "@typescript-eslint/parser": "^8.57.2",
+    "eslint": "^9.39.4",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-native": "^5.0.0",
     "husky": "^9.1.7",
+    "lint-staged": "^16.4.0",
+    "prettier": "^3.8.1",
     "typescript": "~5.9.2"
   }
 }
