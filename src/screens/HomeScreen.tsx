@@ -6,6 +6,7 @@ import { BalanceCard } from '../components/BalanceCard';
 import { QuickAction } from '../components/QuickAction';
 import { TransactionItem } from '../components/TransactionItem';
 import { currentUser, transactions } from '../constants/mockData';
+import { getGreeting } from '../utils/greeting';
 
 const HomeScreen: React.FC = () => {
   const navigate = useNavigate();
@@ -18,7 +19,7 @@ const HomeScreen: React.FC = () => {
         {/* Header */}
         <View className='flex-row items-center justify-between px-4 pt-4 pb-6'>
           <View>
-            <Text className='text-text-secondary text-sm'>Good Morning,</Text>
+            <Text className='text-text-secondary text-sm'>{getGreeting()},</Text>
             <Text className='text-white text-2xl font-bold mt-0.5'>{currentUser.name} 👋</Text>
           </View>
           <TouchableOpacity onPress={() => navigate('/notifications')} className='relative'>
