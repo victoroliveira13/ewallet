@@ -46,7 +46,8 @@ jobs:
         if: github.ref == 'refs/heads/beta'
         run: eas build --platform android --profile preview --non-interactive
 
-      # master → build production (Android AAB + iOS)
+      # master → build production (Android AAB)
+      # iOS requer Distribution Certificate configurado no EAS antes de ativar
       - name: EAS Build Production
         if: github.ref == 'refs/heads/master'
-        run: eas build --platform all --profile production --non-interactive
+        run: eas build --platform android --profile production --non-interactive
