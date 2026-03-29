@@ -22,7 +22,7 @@
         "backgroundColor": "#0D0E18"
       }
     },
-    "plugins": [],
+    "plugins": ["@react-native-community/datetimepicker"],
     "extra": {
       "eas": {
         "projectId": "081c24f3-9bdc-47e1-9d12-5585c42223b8"
