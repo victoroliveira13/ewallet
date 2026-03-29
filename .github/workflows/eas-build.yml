@@ -5,6 +5,12 @@ on:
     branches:
       - beta
       - master
+  workflow_dispatch:
+    inputs:
+      profile:
+        description: 'EAS build profile'
+        required: false
+        default: 'production'
 
 jobs:
   build:
