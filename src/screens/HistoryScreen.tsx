@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { TransactionItem } from '../components/TransactionItem';
-import { transactions } from '../constants/mockData';
+import { useWalletStore } from '../store/useWalletStore';
 
 const FILTERS = ['All', 'Income', 'Expense'];
 
 const HistoryScreen: React.FC = () => {
   const [activeFilter, setActiveFilter] = useState('All');
+  const { transactions } = useWalletStore();
 
   const filtered = transactions.filter((tx) => {
     if (activeFilter === 'Income') return tx.type === 'credit';

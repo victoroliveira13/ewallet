@@ -1,17 +1,13 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigate } from 'react-router-native';
-import { notifications as initialNotifications } from '../constants/mockData';
+import { useNotificationStore } from '../store/useNotificationStore';
 import type { Notification } from '../types';
 
 const NotificationsScreen: React.FC = () => {
   const navigate = useNavigate();
-  const [notifs, setNotifs] = useState<Notification[]>(initialNotifications);
-
-  const markAllRead = () => {
-    setNotifs((prev) => prev.map((n) => ({ ...n, read: true })));
-  };
+  const { notifications: notifs, unreadCount, markAsRead, markAllAsRead } = useNotificationStore();
 
   const iconMap: Record<Notification['type'], string> = {
     transfer: '💸',
@@ -24,8 +20,6 @@ const NotificationsScreen: React.FC = () => {
     info: '#2196F320',
     alert: '#FFB30020',
   };
-
-  const unreadCount = notifs.filter((n) => !n.read).length;
 
   return (
     <SafeAreaView className='flex-1 bg-background'>
@@ -46,7 +40,7 @@ const NotificationsScreen: React.FC = () => {
           </View>
         </View>
         {unreadCount > 0 && (
-          <TouchableOpacity onPress={markAllRead}>
+          <TouchableOpacity onPress={markAllAsRead}>
             <Text className='text-primary text-sm font-medium'>Mark all read</Text>
           </TouchableOpacity>
         )}
@@ -59,11 +53,7 @@ const NotificationsScreen: React.FC = () => {
               <TouchableOpacity
                 className={`flex-row items-start px-4 py-4 ${!notif.read ? 'bg-primary/5' : ''}`}
                 activeOpacity={0.7}
-                onPress={() =>
-                  setNotifs((prev) =>
-                    prev.map((n) => (n.id === notif.id ? { ...n, read: true } : n))
-                  )
-                }
+                onPress={() => markAsRead(notif.id)}
               >
                 {/* Icon */}
                 <View

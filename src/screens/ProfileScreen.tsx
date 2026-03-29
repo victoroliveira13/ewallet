@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigate } from 'react-router-native';
-import { currentUser } from '../constants/mockData';
+import { useAuthStore } from '../store/useAuthStore';
 
 const menuItems = [
   { icon: '💳', label: 'My Cards', description: 'Manage your cards' },
@@ -15,6 +15,7 @@ const menuItems = [
 
 const ProfileScreen: React.FC = () => {
   const navigate = useNavigate();
+  const { user, logout } = useAuthStore();
 
   return (
     <SafeAreaView className='flex-1 bg-background'>
@@ -33,11 +34,11 @@ const ProfileScreen: React.FC = () => {
         {/* User Card */}
         <View className='mx-4 mt-4 bg-surface rounded-3xl p-6 items-center'>
           <View className='w-24 h-24 rounded-full bg-primary/20 items-center justify-center mb-4 border-4 border-primary/30'>
-            <Text className='text-primary text-3xl font-bold'>{currentUser.initials}</Text>
+            <Text className='text-primary text-3xl font-bold'>{user.initials}</Text>
           </View>
-          <Text className='text-white text-xl font-bold'>{currentUser.name}</Text>
-          <Text className='text-text-secondary text-sm mt-1'>{currentUser.username}</Text>
-          <Text className='text-text-muted text-xs mt-0.5'>{currentUser.email}</Text>
+          <Text className='text-white text-xl font-bold'>{user.name}</Text>
+          <Text className='text-text-secondary text-sm mt-1'>{user.username}</Text>
+          <Text className='text-text-muted text-xs mt-0.5'>{user.email}</Text>
 
           {/* Stats */}
           <View className='flex-row w-full mt-6 justify-around'>
@@ -89,7 +90,7 @@ const ProfileScreen: React.FC = () => {
           onPress={() =>
             Alert.alert('Logout', 'Are you sure you want to logout?', [
               { text: 'Cancel' },
-              { text: 'Logout', style: 'destructive' },
+              { text: 'Logout', style: 'destructive', onPress: logout },
             ])
           }
           activeOpacity={0.8}

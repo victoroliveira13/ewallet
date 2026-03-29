@@ -5,11 +5,16 @@ import { useNavigate } from 'react-router-native';
 import { BalanceCard } from '../components/BalanceCard';
 import { QuickAction } from '../components/QuickAction';
 import { TransactionItem } from '../components/TransactionItem';
-import { currentUser, transactions } from '../constants/mockData';
 import { getGreeting } from '../utils/greeting';
+import { useWalletStore } from '../store/useWalletStore';
+import { useAuthStore } from '../store/useAuthStore';
+import { useNotificationStore } from '../store/useNotificationStore';
 
 const HomeScreen: React.FC = () => {
   const navigate = useNavigate();
+  const { balance, transactions } = useWalletStore();
+  const { user } = useAuthStore();
+  const { unreadCount } = useNotificationStore();
 
   const recentTransactions = transactions.slice(0, 4);
 
@@ -20,21 +25,24 @@ const HomeScreen: React.FC = () => {
         <View className='flex-row items-center justify-between px-4 pt-4 pb-6'>
           <View>
             <Text className='text-text-secondary text-sm'>{getGreeting()},</Text>
-            <Text className='text-white text-2xl font-bold mt-0.5'>{currentUser.name} 👋</Text>
+            <Text className='text-white text-2xl font-bold mt-0.5'>{user.name} 👋</Text>
           </View>
           <TouchableOpacity onPress={() => navigate('/notifications')} className='relative'>
             <View className='w-11 h-11 bg-surface rounded-full items-center justify-center'>
               <Text className='text-xl'>🔔</Text>
             </View>
-            {/* Notification badge */}
-            <View className='absolute -top-1 -right-1 w-4 h-4 bg-primary rounded-full items-center justify-center'>
-              <Text className='text-background text-xs font-bold'>2</Text>
-            </View>
+            {unreadCount > 0 && (
+              <View className='absolute -top-1 -right-1 w-4 h-4 bg-primary rounded-full items-center justify-center'>
+                <Text className='text-background text-xs font-bold'>
+                  {unreadCount > 9 ? '9+' : unreadCount}
+                </Text>
+              </View>
+            )}
           </TouchableOpacity>
         </View>
 
         {/* Balance Card */}
-        <BalanceCard balance={currentUser.balance} name={currentUser.name} />
+        <BalanceCard balance={balance} name={user.name} />
 
         {/* Quick Actions */}
         <View className='mt-8 px-4'>

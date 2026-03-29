@@ -5,11 +5,14 @@ import { useNavigate } from 'react-router-native';
 import { ContactItem } from '../components/ContactItem';
 import { NumPad } from '../components/NumPad';
 import { Button } from '../components/ui/Button';
-import { contacts } from '../constants/mockData';
+import { useWalletStore } from '../store/useWalletStore';
+import { useNotificationStore } from '../store/useNotificationStore';
 import type { Contact } from '../types';
 
 const SendScreen: React.FC = () => {
   const navigate = useNavigate();
+  const { contacts, balance, sendTransfer } = useWalletStore();
+  const { addNotification } = useNotificationStore();
   const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
   const [amount, setAmount] = useState('0');
 
@@ -18,10 +21,22 @@ const SendScreen: React.FC = () => {
       Alert.alert('Select Contact', 'Please select a contact to send money to.');
       return;
     }
-    if (parseFloat(amount) <= 0) {
+    const parsedAmount = parseFloat(amount);
+    if (parsedAmount <= 0) {
       Alert.alert('Enter Amount', 'Please enter a valid amount.');
       return;
     }
+    if (parsedAmount > balance) {
+      Alert.alert('Insufficient Balance', `You only have $${balance.toFixed(2)} available.`);
+      return;
+    }
+    sendTransfer(selectedContact, parsedAmount);
+    addNotification({
+      title: 'Transfer Sent',
+      message: `$${parsedAmount.toFixed(2)} sent to ${selectedContact.name}`,
+      time: 'Just now',
+      type: 'transfer',
+    });
     Alert.alert('Transfer Successful! 🎉', `$${amount} sent to ${selectedContact.name}`, [
       { text: 'OK', onPress: () => navigate('/home') },
     ]);
