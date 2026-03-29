@@ -1,12 +1,22 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, SafeAreaView, Share } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TouchableOpacity, Share } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigate } from 'react-router-native';
+import * as Clipboard from 'expo-clipboard';
+import QRCode from 'react-native-qrcode-svg';
 import { currentUser } from '../constants/mockData';
 
 const WALLET_ADDRESS = '0x1A2b3C4d5E6f7A8b9C0d';
 
 const ReceiveScreen: React.FC = () => {
   const navigate = useNavigate();
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async () => {
+    await Clipboard.setStringAsync(WALLET_ADDRESS);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   const handleShare = () => {
     Share.share({
@@ -40,34 +50,22 @@ const ReceiveScreen: React.FC = () => {
         {/* QR Code placeholder */}
         <View className='bg-surface rounded-3xl p-6 w-full items-center'>
           <View className='w-52 h-52 bg-white rounded-2xl items-center justify-center mb-4 p-3'>
-            {/* QR code grid pattern */}
-            <View className='flex-1 w-full'>
-              {Array.from({ length: 7 }).map((_, row) => (
-                <View key={row} className='flex-row flex-1 justify-between'>
-                  {Array.from({ length: 7 }).map((_, col) => {
-                    const isCorner =
-                      (row < 2 && col < 2) || (row < 2 && col > 4) || (row > 4 && col < 2);
-                    const isDark = isCorner || Math.random() > 0.5;
-                    return (
-                      <View
-                        key={col}
-                        className='flex-1 m-0.5 rounded-sm'
-                        style={{ backgroundColor: isDark ? '#0D0E18' : 'transparent' }}
-                      />
-                    );
-                  })}
-                </View>
-              ))}
-            </View>
+            <QRCode value={WALLET_ADDRESS} size={176} backgroundColor='white' color='#0D0E18' />
           </View>
 
           <Text className='text-white font-semibold text-base mb-1'>Scan to Pay</Text>
           <Text className='text-text-secondary text-xs text-center'>{WALLET_ADDRESS}</Text>
 
           {/* Copy button */}
-          <TouchableOpacity className='mt-4 bg-surface-2 rounded-xl px-6 py-3 flex-row items-center'>
-            <Text className='text-primary mr-2'>📋</Text>
-            <Text className='text-primary font-semibold text-sm'>Copy Address</Text>
+          <TouchableOpacity
+            className='mt-4 bg-surface-2 rounded-xl px-6 py-3 flex-row items-center'
+            onPress={handleCopy}
+            activeOpacity={0.7}
+          >
+            <Text className='text-primary mr-2'>{copied ? '✅' : '📋'}</Text>
+            <Text className='text-primary font-semibold text-sm'>
+              {copied ? 'Copied!' : 'Copy Address'}
+            </Text>
           </TouchableOpacity>
         </View>
 
