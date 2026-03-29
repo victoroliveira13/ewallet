@@ -11,13 +11,20 @@
       "backgroundColor": "#0D0E18"
     },
     "ios": {
-      "supportsTablet": false
+      "supportsTablet": false,
+      "bundleIdentifier": "com.ewallet.app"
     },
     "android": {
+      "package": "com.ewallet.app",
       "adaptiveIcon": {
         "backgroundColor": "#0D0E18"
       }
     },
-    "plugins": []
+    "plugins": [],
+    "extra": {
+      "eas": {
+        "projectId": "your-eas-project-id"
+      }
+    }
   }
 }
