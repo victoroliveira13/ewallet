@@ -7,8 +7,11 @@ export const Colors = {
   secondary: '#8A8FA8',
   muted: '#4B5268',
   danger: '#FF4757',
+  dangerForeground: '#FFFFFF',
   warning: '#FFB300',
+  warningForeground: '#1A1A1A',
   info: '#2196F3',
+  infoForeground: '#FFFFFF',
   white: '#FFFFFF',
   black: '#000000',
 
