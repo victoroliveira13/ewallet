@@ -23,8 +23,9 @@
     "plugins": [],
     "extra": {
       "eas": {
-        "projectId": "your-eas-project-id"
+        "projectId": "081c24f3-9bdc-47e1-9d12-5585c42223b8"
       }
-    }
+    },
+    "owner": "victor12321"
   }
 }
