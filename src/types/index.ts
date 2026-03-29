@@ -6,6 +6,7 @@ export interface Transaction {
   type: 'credit' | 'debit';
   category: 'shopping' | 'food' | 'transport' | 'entertainment' | 'transfer' | 'salary';
   date: string;
+  timestamp: string; // ISO 8601 date string for grouping/sorting
   icon: string;
 }
 

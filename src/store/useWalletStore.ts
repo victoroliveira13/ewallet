@@ -28,6 +28,7 @@ export const useWalletStore = create<WalletState>((set) => ({
         type: 'debit',
         category: 'transfer',
         date: 'Just now',
+        timestamp: new Date().toISOString(),
         icon: '💸',
       };
       return {

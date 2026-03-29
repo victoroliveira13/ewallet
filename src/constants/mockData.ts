@@ -19,6 +19,7 @@ export const transactions: Transaction[] = [
     type: 'debit',
     category: 'entertainment',
     date: 'Today, 2:30 PM',
+    timestamp: new Date(new Date().setHours(14, 30, 0, 0)).toISOString(),
     icon: '🎬',
   },
   {
@@ -29,6 +30,7 @@ export const transactions: Transaction[] = [
     type: 'credit',
     category: 'salary',
     date: 'Today, 9:00 AM',
+    timestamp: new Date(new Date().setHours(9, 0, 0, 0)).toISOString(),
     icon: '💰',
   },
   {
@@ -39,6 +41,12 @@ export const transactions: Transaction[] = [
     type: 'debit',
     category: 'transport',
     date: 'Yesterday, 6:45 PM',
+    timestamp: (() => {
+      const d = new Date();
+      d.setDate(d.getDate() - 1);
+      d.setHours(18, 45, 0, 0);
+      return d.toISOString();
+    })(),
     icon: '🚗',
   },
   {
@@ -49,6 +57,12 @@ export const transactions: Transaction[] = [
     type: 'debit',
     category: 'food',
     date: 'Yesterday, 8:15 AM',
+    timestamp: (() => {
+      const d = new Date();
+      d.setDate(d.getDate() - 1);
+      d.setHours(8, 15, 0, 0);
+      return d.toISOString();
+    })(),
     icon: '☕',
   },
   {
@@ -58,7 +72,13 @@ export const transactions: Transaction[] = [
     amount: 150.0,
     type: 'credit',
     category: 'transfer',
-    date: 'Mar 20, 3:00 PM',
+    date: 'Mar 25, 3:00 PM',
+    timestamp: (() => {
+      const d = new Date();
+      d.setDate(d.getDate() - 4);
+      d.setHours(15, 0, 0, 0);
+      return d.toISOString();
+    })(),
     icon: '💸',
   },
   {
@@ -68,7 +88,13 @@ export const transactions: Transaction[] = [
     amount: -67.3,
     type: 'debit',
     category: 'shopping',
-    date: 'Mar 19, 1:20 PM',
+    date: 'Mar 24, 1:20 PM',
+    timestamp: (() => {
+      const d = new Date();
+      d.setDate(d.getDate() - 5);
+      d.setHours(13, 20, 0, 0);
+      return d.toISOString();
+    })(),
     icon: '🛒',
   },
   {
@@ -78,7 +104,13 @@ export const transactions: Transaction[] = [
     amount: -9.99,
     type: 'debit',
     category: 'entertainment',
-    date: 'Mar 18, 12:00 PM',
+    date: 'Mar 15, 12:00 PM',
+    timestamp: (() => {
+      const d = new Date();
+      d.setDate(d.getDate() - 14);
+      d.setHours(12, 0, 0, 0);
+      return d.toISOString();
+    })(),
     icon: '🎵',
   },
   {
@@ -88,7 +120,13 @@ export const transactions: Transaction[] = [
     amount: -15.4,
     type: 'debit',
     category: 'food',
-    date: 'Mar 17, 7:30 PM',
+    date: 'Feb 20, 7:30 PM',
+    timestamp: (() => {
+      const d = new Date();
+      d.setDate(d.getDate() - 37);
+      d.setHours(19, 30, 0, 0);
+      return d.toISOString();
+    })(),
     icon: '🍔',
   },
 ];
