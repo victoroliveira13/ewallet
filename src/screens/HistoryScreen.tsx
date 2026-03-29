@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, SafeAreaView, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { TransactionItem } from '../components/TransactionItem';
 import { transactions } from '../constants/mockData';
 
@@ -24,7 +25,7 @@ const HistoryScreen: React.FC = () => {
 
   return (
     <SafeAreaView className='flex-1 bg-background'>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView className='flex-1' showsVerticalScrollIndicator={false}>
         {/* Header */}
         <View className='px-4 pt-4 pb-2'>
           <Text className='text-white text-2xl font-bold'>Transaction History</Text>

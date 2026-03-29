@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text, SafeAreaView, ScrollView, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, Alert } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigate } from 'react-router-native';
 import { currentUser } from '../constants/mockData';
 
@@ -17,7 +18,7 @@ const ProfileScreen: React.FC = () => {
 
   return (
     <SafeAreaView className='flex-1 bg-background'>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView className='flex-1' showsVerticalScrollIndicator={false}>
         {/* Header */}
         <View className='flex-row items-center justify-between px-4 pt-4 pb-2'>
           <Text className='text-white text-2xl font-bold'>Profile</Text>
