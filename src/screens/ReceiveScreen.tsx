@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Share } from 'react-native';
+import { View, Text, TouchableOpacity, Share, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigate } from 'react-router-native';
 import * as Clipboard from 'expo-clipboard';
@@ -8,21 +8,32 @@ import { currentUser } from '../constants/mockData';
 import { WALLET_ADDRESS } from '../constants/wallet';
 import { ROUTES } from '../constants/routes';
 import { COPY_FEEDBACK_DURATION_MS } from '../constants/config';
+import { handleApiError, logError } from '../utils/errorHandling';
 
 const ReceiveScreen: React.FC = () => {
   const navigate = useNavigate();
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
-    await Clipboard.setStringAsync(WALLET_ADDRESS);
-    setCopied(true);
-    setTimeout(() => setCopied(false), COPY_FEEDBACK_DURATION_MS);
+    try {
+      await Clipboard.setStringAsync(WALLET_ADDRESS);
+      setCopied(true);
+      setTimeout(() => setCopied(false), COPY_FEEDBACK_DURATION_MS);
+    } catch (err) {
+      logError(err, 'ReceiveScreen.handleCopy');
+      Alert.alert('Erro', handleApiError(err));
+    }
   };
 
-  const handleShare = () => {
-    Share.share({
-      message: `Send me money on E-Wallet!\nUsername: ${currentUser.username}\nWallet: ${WALLET_ADDRESS}`,
-    });
+  const handleShare = async () => {
+    try {
+      await Share.share({
+        message: `Send me money on E-Wallet!\nUsername: ${currentUser.username}\nWallet: ${WALLET_ADDRESS}`,
+      });
+    } catch (err) {
+      logError(err, 'ReceiveScreen.handleShare');
+      Alert.alert('Erro', handleApiError(err));
+    }
   };
 
   return (

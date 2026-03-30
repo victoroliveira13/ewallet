@@ -5,8 +5,11 @@ import { useNavigate } from 'react-router-native';
 import { ContactItem } from '../components/ContactItem';
 import { NumPad } from '../components/NumPad';
 import { Button } from '../components/ui/Button';
+import { ErrorMessage } from '../components/ErrorMessage';
 import { useWalletStore } from '../store/useWalletStore';
 import { useNotificationStore } from '../store/useNotificationStore';
+import { handleApiError, logError } from '../utils/errorHandling';
+import { ROUTES } from '../constants/routes';
 import type { Contact } from '../types';
 
 const SendScreen: React.FC = () => {
@@ -15,31 +18,44 @@ const SendScreen: React.FC = () => {
   const { addNotification } = useNotificationStore();
   const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
   const [amount, setAmount] = useState('0');
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
-  const handleSend = () => {
+  const handleSend = async () => {
+    setError(null);
+
     if (!selectedContact) {
-      Alert.alert('Select Contact', 'Please select a contact to send money to.');
+      setError('Selecione um contato para enviar.');
       return;
     }
     const parsedAmount = parseFloat(amount);
-    if (parsedAmount <= 0) {
-      Alert.alert('Enter Amount', 'Please enter a valid amount.');
+    if (isNaN(parsedAmount) || parsedAmount <= 0) {
+      setError('Insira um valor válido maior que zero.');
       return;
     }
     if (parsedAmount > balance) {
-      Alert.alert('Insufficient Balance', `You only have $${balance.toFixed(2)} available.`);
+      setError(`Saldo insuficiente. Você tem $${balance.toFixed(2)} disponível.`);
       return;
     }
-    sendTransfer(selectedContact, parsedAmount);
-    addNotification({
-      title: 'Transfer Sent',
-      message: `$${parsedAmount.toFixed(2)} sent to ${selectedContact.name}`,
-      time: 'Just now',
-      type: 'transfer',
-    });
-    Alert.alert('Transfer Successful! 🎉', `$${amount} sent to ${selectedContact.name}`, [
-      { text: 'OK', onPress: () => navigate('/home') },
-    ]);
+
+    setLoading(true);
+    try {
+      sendTransfer(selectedContact, parsedAmount);
+      addNotification({
+        title: 'Transfer Sent',
+        message: `$${parsedAmount.toFixed(2)} sent to ${selectedContact.name}`,
+        time: 'Just now',
+        type: 'transfer',
+      });
+      Alert.alert('Transfer Successful! 🎉', `$${amount} sent to ${selectedContact.name}`, [
+        { text: 'OK', onPress: () => navigate(ROUTES.HOME) },
+      ]);
+    } catch (err) {
+      logError(err, 'SendScreen.handleSend');
+      setError(handleApiError(err));
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -47,7 +63,7 @@ const SendScreen: React.FC = () => {
       {/* Header */}
       <View className='flex-row items-center px-4 pt-4 pb-4'>
         <TouchableOpacity
-          onPress={() => navigate('/home')}
+          onPress={() => navigate(ROUTES.HOME)}
           className='w-10 h-10 bg-surface rounded-full items-center justify-center mr-4'
         >
           <Text className='text-white text-lg'>←</Text>
@@ -64,6 +80,11 @@ const SendScreen: React.FC = () => {
 
         {/* NumPad */}
         <NumPad value={amount} onChange={setAmount} />
+
+        {/* Inline error */}
+        <View className='mx-4'>
+          <ErrorMessage message={error} />
+        </View>
 
         {/* Selected Contact or Contact List */}
         {selectedContact ? (
@@ -108,7 +129,7 @@ const SendScreen: React.FC = () => {
         {/* Send Button */}
         <View className='mx-4 mt-6 mb-8'>
           <Button
-            title={`Send $${amount}`}
+            title={loading ? 'Sending...' : `Send $${amount}`}
             onPress={handleSend}
             variant='primary'
             fullWidth
