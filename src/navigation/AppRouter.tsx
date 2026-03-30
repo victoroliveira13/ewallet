@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, ActivityIndicator } from 'react-native';
-import { Route, Routes, Navigate } from 'react-router-native';
+import { Route, Routes, Navigate, useNavigate } from 'react-router-native';
 import { BottomNavBar } from '../components/BottomNavBar';
 import { PushNotificationProvider } from '../components/PushNotificationProvider';
 import HomeScreen from '../screens/HomeScreen';
@@ -17,6 +17,14 @@ import { useAuthStore } from '../store/useAuthStore';
 
 const AppRouter: React.FC = () => {
   const { isAuthenticated, isLoading } = useAuthStore();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isLoading) return;
+    if (!isAuthenticated) {
+      navigate('/login', { replace: true });
+    }
+  }, [isAuthenticated, isLoading]);
 
   if (isLoading) {
     return (
@@ -26,40 +34,51 @@ const AppRouter: React.FC = () => {
     );
   }
 
-  if (!isAuthenticated) {
-    return (
-      <Routes>
-        <Route path='/' element={<Navigate to='/login' replace />} />
-        <Route path='/login' element={<LoginScreen />} />
-        <Route path='/register' element={<RegisterScreen />} />
-        <Route path='/forgot-password' element={<ForgotPasswordScreen />} />
-        <Route path='*' element={<Navigate to='/login' replace />} />
-      </Routes>
-    );
-  }
-
   return (
     <View className='flex-1 bg-background'>
-      {/* Inicializa push notifications (precisa estar dentro do NativeRouter) */}
-      <PushNotificationProvider />
-
-      {/* Main content area */}
+      {isAuthenticated && <PushNotificationProvider />}
       <View className='flex-1'>
         <Routes>
-          <Route path='/' element={<Navigate to='/home' replace />} />
-          <Route path='/home' element={<HomeScreen />} />
-          <Route path='/send' element={<SendScreen />} />
-          <Route path='/send/confirm' element={<SendConfirmationScreen />} />
-          <Route path='/receive' element={<ReceiveScreen />} />
-          <Route path='/history' element={<HistoryScreen />} />
-          <Route path='/profile' element={<ProfileScreen />} />
-          <Route path='/notifications' element={<NotificationsScreen />} />
-          <Route path='*' element={<Navigate to='/home' replace />} />
+          <Route path='/login' element={<LoginScreen />} />
+          <Route path='/register' element={<RegisterScreen />} />
+          <Route path='/forgot-password' element={<ForgotPasswordScreen />} />
+          <Route
+            path='/home'
+            element={isAuthenticated ? <HomeScreen /> : <Navigate to='/login' replace />}
+          />
+          <Route
+            path='/send'
+            element={isAuthenticated ? <SendScreen /> : <Navigate to='/login' replace />}
+          />
+          <Route
+            path='/send/confirm'
+            element={
+              isAuthenticated ? <SendConfirmationScreen /> : <Navigate to='/login' replace />
+            }
+          />
+          <Route
+            path='/receive'
+            element={isAuthenticated ? <ReceiveScreen /> : <Navigate to='/login' replace />}
+          />
+          <Route
+            path='/history'
+            element={isAuthenticated ? <HistoryScreen /> : <Navigate to='/login' replace />}
+          />
+          <Route
+            path='/profile'
+            element={isAuthenticated ? <ProfileScreen /> : <Navigate to='/login' replace />}
+          />
+          <Route
+            path='/notifications'
+            element={isAuthenticated ? <NotificationsScreen /> : <Navigate to='/login' replace />}
+          />
+          <Route
+            path='*'
+            element={<Navigate to={isAuthenticated ? '/home' : '/login'} replace />}
+          />
         </Routes>
       </View>
-
-      {/* Bottom Navigation */}
-      <BottomNavBar />
+      {isAuthenticated && <BottomNavBar />}
     </View>
   );
 };
