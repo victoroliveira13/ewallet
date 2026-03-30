@@ -40,7 +40,14 @@
           "color": "#00D97E",
           "defaultChannel": "ewallet"
         }
-      ]
+      ],
+      [
+        "expo-local-authentication",
+        {
+          "faceIDPermission": "Permitir que o eWallet use o Face ID para autenticar."
+        }
+      ],
+      "expo-secure-store"
     ],
     "extra": {
       "eas": {

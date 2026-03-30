@@ -8,7 +8,13 @@ import { ROUTES } from '../constants/routes';
 
 const ProfileScreen: React.FC = () => {
   const navigate = useNavigate();
-  const { user, logout } = useAuthStore();
+  const { user, logout, biometricsEnabled, enableBiometrics } = useAuthStore();
+
+  const handleLogout = () =>
+    Alert.alert('Sair', 'Tem certeza que deseja sair?', [
+      { text: 'Cancelar' },
+      { text: 'Sair', style: 'destructive', onPress: () => logout() },
+    ]);
 
   return (
     <SafeAreaView className='flex-1 bg-background'>
@@ -27,11 +33,11 @@ const ProfileScreen: React.FC = () => {
         {/* User Card */}
         <View className='mx-4 mt-4 bg-surface rounded-3xl p-6 items-center'>
           <View className='w-24 h-24 rounded-full bg-primary/20 items-center justify-center mb-4 border-4 border-primary/30'>
-            <Text className='text-primary text-3xl font-bold'>{user.initials}</Text>
+            <Text className='text-primary text-3xl font-bold'>{user?.initials}</Text>
           </View>
-          <Text className='text-white text-xl font-bold'>{user.name}</Text>
-          <Text className='text-text-secondary text-sm mt-1'>{user.username}</Text>
-          <Text className='text-text-muted text-xs mt-0.5'>{user.email}</Text>
+          <Text className='text-white text-xl font-bold'>{user?.name}</Text>
+          <Text className='text-text-secondary text-sm mt-1'>{user?.username}</Text>
+          <Text className='text-text-muted text-xs mt-0.5'>{user?.email}</Text>
 
           {/* Stats */}
           <View className='flex-row w-full mt-6 justify-around'>
@@ -51,6 +57,26 @@ const ProfileScreen: React.FC = () => {
             </View>
           </View>
         </View>
+
+        {/* Biometrics toggle */}
+        {!biometricsEnabled && (
+          <TouchableOpacity
+            className='mx-4 mt-4 bg-surface rounded-2xl px-4 py-4 flex-row items-center'
+            onPress={enableBiometrics}
+            activeOpacity={0.8}
+          >
+            <View className='w-10 h-10 bg-surface-2 rounded-xl items-center justify-center mr-4'>
+              <Text className='text-lg'>🔒</Text>
+            </View>
+            <View className='flex-1'>
+              <Text className='text-white font-medium'>Ativar biometria</Text>
+              <Text className='text-text-muted text-xs mt-0.5'>
+                Entrar com Face ID ou impressão digital
+              </Text>
+            </View>
+            <Text className='text-primary text-sm font-semibold'>Ativar</Text>
+          </TouchableOpacity>
+        )}
 
         {/* Menu Items */}
         <View className='mx-4 mt-4 bg-surface rounded-2xl overflow-hidden mb-4'>
@@ -80,15 +106,10 @@ const ProfileScreen: React.FC = () => {
         {/* Logout */}
         <TouchableOpacity
           className='mx-4 mb-8 bg-danger/10 rounded-2xl py-4 items-center'
-          onPress={() =>
-            Alert.alert('Logout', 'Are you sure you want to logout?', [
-              { text: 'Cancel' },
-              { text: 'Logout', style: 'destructive', onPress: logout },
-            ])
-          }
+          onPress={handleLogout}
           activeOpacity={0.8}
         >
-          <Text className='text-danger font-bold text-base'>Log Out</Text>
+          <Text className='text-danger font-bold text-base'>Sair</Text>
         </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>

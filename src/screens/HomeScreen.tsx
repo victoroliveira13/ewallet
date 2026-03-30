@@ -28,7 +28,7 @@ const HomeScreen: React.FC = () => {
         <View className='flex-row items-center justify-between px-4 pt-4 pb-6'>
           <View>
             <Text className='text-text-secondary text-sm'>{getGreeting()},</Text>
-            <Text className='text-white text-2xl font-bold mt-0.5'>{user.name} 👋</Text>
+            <Text className='text-white text-2xl font-bold mt-0.5'>{user?.name} 👋</Text>
           </View>
           <TouchableOpacity onPress={() => navigate(ROUTES.NOTIFICATIONS)} className='relative'>
             <View className='w-11 h-11 bg-surface rounded-full items-center justify-center'>
@@ -45,7 +45,7 @@ const HomeScreen: React.FC = () => {
         </View>
 
         {/* Balance Card */}
-        <BalanceCard balance={balance} name={user.name} />
+        <BalanceCard balance={balance} name={user?.name ?? ''} />
 
         {/* Quick Actions */}
         <View className='mt-8 px-4'>
