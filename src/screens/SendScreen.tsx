@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigate } from 'react-router-native';
 import { ContactItem } from '../components/ContactItem';
@@ -7,21 +7,17 @@ import { NumPad } from '../components/NumPad';
 import { Button } from '../components/ui/Button';
 import { ErrorMessage } from '../components/ErrorMessage';
 import { useWalletStore } from '../store/useWalletStore';
-import { useNotificationStore } from '../store/useNotificationStore';
-import { handleApiError, logError } from '../utils/errorHandling';
 import { ROUTES } from '../constants/routes';
 import type { Contact } from '../types';
 
 const SendScreen: React.FC = () => {
   const navigate = useNavigate();
-  const { contacts, balance, sendTransfer } = useWalletStore();
-  const { addNotification } = useNotificationStore();
+  const { contacts, balance } = useWalletStore();
   const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
   const [amount, setAmount] = useState('0');
   const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
 
-  const handleSend = async () => {
+  const handleSend = () => {
     setError(null);
 
     if (!selectedContact) {
@@ -38,24 +34,7 @@ const SendScreen: React.FC = () => {
       return;
     }
 
-    setLoading(true);
-    try {
-      sendTransfer(selectedContact, parsedAmount);
-      addNotification({
-        title: 'Transfer Sent',
-        message: `$${parsedAmount.toFixed(2)} sent to ${selectedContact.name}`,
-        time: 'Just now',
-        type: 'transfer',
-      });
-      Alert.alert('Transfer Successful! 🎉', `$${amount} sent to ${selectedContact.name}`, [
-        { text: 'OK', onPress: () => navigate(ROUTES.HOME) },
-      ]);
-    } catch (err) {
-      logError(err, 'SendScreen.handleSend');
-      setError(handleApiError(err));
-    } finally {
-      setLoading(false);
-    }
+    navigate(ROUTES.SEND_CONFIRM, { state: { contact: selectedContact, amount: parsedAmount } });
   };
 
   return (
@@ -129,7 +108,7 @@ const SendScreen: React.FC = () => {
         {/* Send Button */}
         <View className='mx-4 mt-6 mb-8'>
           <Button
-            title={loading ? 'Sending...' : `Send $${amount}`}
+            title={`Revisar envio — $${amount}`}
             onPress={handleSend}
             variant='primary'
             fullWidth

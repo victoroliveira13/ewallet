@@ -1,6 +1,7 @@
 export const ROUTES = {
   HOME: '/home',
   SEND: '/send',
+  SEND_CONFIRM: '/send/confirm',
   RECEIVE: '/receive',
   HISTORY: '/history',
   PROFILE: '/profile',

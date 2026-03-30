@@ -9,6 +9,7 @@ import ReceiveScreen from '../screens/ReceiveScreen';
 import HistoryScreen from '../screens/HistoryScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import NotificationsScreen from '../screens/NotificationsScreen';
+import SendConfirmationScreen from '../screens/SendConfirmationScreen';
 import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
 import ForgotPasswordScreen from '../screens/ForgotPasswordScreen';
@@ -48,6 +49,7 @@ const AppRouter: React.FC = () => {
           <Route path='/' element={<Navigate to='/home' replace />} />
           <Route path='/home' element={<HomeScreen />} />
           <Route path='/send' element={<SendScreen />} />
+          <Route path='/send/confirm' element={<SendConfirmationScreen />} />
           <Route path='/receive' element={<ReceiveScreen />} />
           <Route path='/history' element={<HistoryScreen />} />
           <Route path='/profile' element={<ProfileScreen />} />
