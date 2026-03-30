@@ -12,9 +12,27 @@ const ProfileScreen: React.FC = () => {
 
   const handleLogout = () =>
     Alert.alert('Sair', 'Tem certeza que deseja sair?', [
-      { text: 'Cancelar' },
-      { text: 'Sair', style: 'destructive', onPress: () => logout() },
+      { text: 'Cancelar', style: 'cancel' },
+      {
+        text: 'Sair',
+        style: 'destructive',
+        onPress: async () => {
+          await logout();
+        },
+      },
     ]);
+
+  const handleEnableBiometrics = async () => {
+    try {
+      await enableBiometrics();
+      Alert.alert('Biometria ativada ✅', 'Agora você pode entrar com Face ID ou digital.');
+    } catch (err) {
+      Alert.alert(
+        'Biometria indisponível',
+        err instanceof Error ? err.message : 'Não foi possível ativar a biometria.'
+      );
+    }
+  };
 
   return (
     <SafeAreaView className='flex-1 bg-background'>
@@ -62,7 +80,7 @@ const ProfileScreen: React.FC = () => {
         {!biometricsEnabled && (
           <TouchableOpacity
             className='mx-4 mt-4 bg-surface rounded-2xl px-4 py-4 flex-row items-center'
-            onPress={enableBiometrics}
+            onPress={handleEnableBiometrics}
             activeOpacity={0.8}
           >
             <View className='w-10 h-10 bg-surface-2 rounded-xl items-center justify-center mr-4'>

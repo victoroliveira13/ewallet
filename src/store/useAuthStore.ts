@@ -72,8 +72,10 @@ export const useAuthStore = create<AuthState>((set) => ({
   },
 
   logout: async () => {
-    await AsyncStorage.multiRemove([STORAGE_KEYS.SESSION, STORAGE_KEYS.BIOMETRICS]);
+    // Atualiza estado imediatamente para resposta instantânea na UI
     set({ user: currentUser, isAuthenticated: false, biometricsEnabled: false });
+    // Limpa storage em background
+    AsyncStorage.multiRemove([STORAGE_KEYS.SESSION, STORAGE_KEYS.BIOMETRICS]).catch(() => {});
   },
 
   restoreSession: async () => {
