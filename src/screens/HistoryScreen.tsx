@@ -6,8 +6,8 @@ import { TransactionItem } from '../components/TransactionItem';
 import { SearchBar } from '../components/SearchBar';
 import { useWalletStore } from '../store/useWalletStore';
 import { groupTransactionsByDate } from '../utils/groupTransactionsByDate';
-
-const FILTERS = ['All', 'Income', 'Expense'];
+import { TRANSACTION_FILTERS } from '../constants/ui';
+import type { TransactionFilter } from '../constants/ui';
 
 type DatePickerTarget = 'from' | 'to' | null;
 
@@ -15,7 +15,7 @@ const HistoryScreen: React.FC = () => {
   const { transactions } = useWalletStore();
 
   // --- filter state ---
-  const [activeFilter, setActiveFilter] = useState('All');
+  const [activeFilter, setActiveFilter] = useState<TransactionFilter>('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [dateFrom, setDateFrom] = useState<Date | null>(null);
@@ -127,7 +127,7 @@ const HistoryScreen: React.FC = () => {
 
             {/* Filter row: type pills + advanced toggle */}
             <View className='flex-row items-center px-4 mt-4 gap-2'>
-              {FILTERS.map((filter) => (
+              {TRANSACTION_FILTERS.map((filter) => (
                 <TouchableOpacity
                   key={filter}
                   onPress={() => setActiveFilter(filter)}

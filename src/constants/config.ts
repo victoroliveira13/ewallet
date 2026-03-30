@@ -1,0 +1,4 @@
+export const RECENT_TRANSACTIONS_LIMIT = 4;
+export const TRANSACTION_PAGE_SIZE = 20;
+export const MAX_BADGE_COUNT = 9;
+export const COPY_FEEDBACK_DURATION_MS = 2000;

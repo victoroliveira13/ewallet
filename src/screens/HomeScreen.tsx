@@ -9,6 +9,9 @@ import { getGreeting } from '../utils/greeting';
 import { useWalletStore } from '../store/useWalletStore';
 import { useAuthStore } from '../store/useAuthStore';
 import { useNotificationStore } from '../store/useNotificationStore';
+import { RECENT_TRANSACTIONS_LIMIT, MAX_BADGE_COUNT } from '../constants/config';
+import { ROUTES } from '../constants/routes';
+import { QUICK_ACTIONS } from '../constants/ui';
 
 const HomeScreen: React.FC = () => {
   const navigate = useNavigate();
@@ -16,7 +19,7 @@ const HomeScreen: React.FC = () => {
   const { user } = useAuthStore();
   const { unreadCount } = useNotificationStore();
 
-  const recentTransactions = transactions.slice(0, 4);
+  const recentTransactions = transactions.slice(0, RECENT_TRANSACTIONS_LIMIT);
 
   return (
     <SafeAreaView className='flex-1 bg-background'>
@@ -27,14 +30,14 @@ const HomeScreen: React.FC = () => {
             <Text className='text-text-secondary text-sm'>{getGreeting()},</Text>
             <Text className='text-white text-2xl font-bold mt-0.5'>{user.name} 👋</Text>
           </View>
-          <TouchableOpacity onPress={() => navigate('/notifications')} className='relative'>
+          <TouchableOpacity onPress={() => navigate(ROUTES.NOTIFICATIONS)} className='relative'>
             <View className='w-11 h-11 bg-surface rounded-full items-center justify-center'>
               <Text className='text-xl'>🔔</Text>
             </View>
             {unreadCount > 0 && (
               <View className='absolute -top-1 -right-1 w-4 h-4 bg-primary rounded-full items-center justify-center'>
                 <Text className='text-background text-xs font-bold'>
-                  {unreadCount > 9 ? '9+' : unreadCount}
+                  {unreadCount > MAX_BADGE_COUNT ? `${MAX_BADGE_COUNT}+` : unreadCount}
                 </Text>
               </View>
             )}
@@ -48,10 +51,15 @@ const HomeScreen: React.FC = () => {
         <View className='mt-8 px-4'>
           <Text className='text-white font-semibold text-base mb-4'>Quick Actions</Text>
           <View className='flex-row justify-between'>
-            <QuickAction label='Send' icon='↑' onPress={() => navigate('/send')} highlighted />
-            <QuickAction label='Receive' icon='↓' onPress={() => navigate('/receive')} />
-            <QuickAction label='Top Up' icon='+' onPress={() => {}} />
-            <QuickAction label='More' icon='•••' onPress={() => {}} />
+            {QUICK_ACTIONS.map((action) => (
+              <QuickAction
+                key={action.label}
+                label={action.label}
+                icon={action.icon}
+                onPress={() => action.route && navigate(action.route)}
+                highlighted={action.highlighted}
+              />
+            ))}
           </View>
         </View>
 
@@ -59,7 +67,7 @@ const HomeScreen: React.FC = () => {
         <View className='mt-8 mb-8'>
           <View className='flex-row items-center justify-between px-4 mb-2'>
             <Text className='text-white font-semibold text-base'>Recent Transactions</Text>
-            <TouchableOpacity onPress={() => navigate('/history')}>
+            <TouchableOpacity onPress={() => navigate(ROUTES.HISTORY)}>
               <Text className='text-primary text-sm font-medium'>See All</Text>
             </TouchableOpacity>
           </View>

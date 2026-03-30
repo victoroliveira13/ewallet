@@ -3,15 +3,8 @@ import { View, Text, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigate } from 'react-router-native';
 import { useAuthStore } from '../store/useAuthStore';
-
-const menuItems = [
-  { icon: '💳', label: 'My Cards', description: 'Manage your cards' },
-  { icon: '🔔', label: 'Notifications', description: 'Push notifications' },
-  { icon: '🔒', label: 'Security', description: 'Password & biometrics' },
-  { icon: '🌍', label: 'Language', description: 'English' },
-  { icon: '❓', label: 'Help & Support', description: 'FAQ & contact' },
-  { icon: '⚙️', label: 'Settings', description: 'App settings' },
-];
+import { PROFILE_MENU_ITEMS } from '../constants/ui';
+import { ROUTES } from '../constants/routes';
 
 const ProfileScreen: React.FC = () => {
   const navigate = useNavigate();
@@ -24,7 +17,7 @@ const ProfileScreen: React.FC = () => {
         <View className='flex-row items-center justify-between px-4 pt-4 pb-2'>
           <Text className='text-white text-2xl font-bold'>Profile</Text>
           <TouchableOpacity
-            onPress={() => navigate('/notifications')}
+            onPress={() => navigate(ROUTES.NOTIFICATIONS)}
             className='w-10 h-10 bg-surface rounded-full items-center justify-center'
           >
             <Text>🔔</Text>
@@ -61,13 +54,13 @@ const ProfileScreen: React.FC = () => {
 
         {/* Menu Items */}
         <View className='mx-4 mt-4 bg-surface rounded-2xl overflow-hidden mb-4'>
-          {menuItems.map((item, index) => (
+          {PROFILE_MENU_ITEMS.map((item, index) => (
             <View key={item.label}>
               <TouchableOpacity
                 className='flex-row items-center px-4 py-4'
                 activeOpacity={0.7}
                 onPress={() => {
-                  if (item.label === 'Notifications') navigate('/notifications');
+                  if (item.route) navigate(item.route);
                 }}
               >
                 <View className='w-10 h-10 bg-surface-2 rounded-xl items-center justify-center mr-4'>
@@ -79,7 +72,7 @@ const ProfileScreen: React.FC = () => {
                 </View>
                 <Text className='text-text-muted'>›</Text>
               </TouchableOpacity>
-              {index < menuItems.length - 1 && <View className='h-px bg-surface-2 mx-4' />}
+              {index < PROFILE_MENU_ITEMS.length - 1 && <View className='h-px bg-surface-2 mx-4' />}
             </View>
           ))}
         </View>

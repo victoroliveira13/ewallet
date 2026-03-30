@@ -5,8 +5,9 @@ import { useNavigate } from 'react-router-native';
 import * as Clipboard from 'expo-clipboard';
 import QRCode from 'react-native-qrcode-svg';
 import { currentUser } from '../constants/mockData';
-
-const WALLET_ADDRESS = '0x1A2b3C4d5E6f7A8b9C0d';
+import { WALLET_ADDRESS } from '../constants/wallet';
+import { ROUTES } from '../constants/routes';
+import { COPY_FEEDBACK_DURATION_MS } from '../constants/config';
 
 const ReceiveScreen: React.FC = () => {
   const navigate = useNavigate();
@@ -15,7 +16,7 @@ const ReceiveScreen: React.FC = () => {
   const handleCopy = async () => {
     await Clipboard.setStringAsync(WALLET_ADDRESS);
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    setTimeout(() => setCopied(false), COPY_FEEDBACK_DURATION_MS);
   };
 
   const handleShare = () => {
@@ -29,7 +30,7 @@ const ReceiveScreen: React.FC = () => {
       {/* Header */}
       <View className='flex-row items-center px-4 pt-4 pb-4'>
         <TouchableOpacity
-          onPress={() => navigate('/home')}
+          onPress={() => navigate(ROUTES.HOME)}
           className='w-10 h-10 bg-surface rounded-full items-center justify-center mr-4'
         >
           <Text className='text-white text-lg'>←</Text>
@@ -47,7 +48,7 @@ const ReceiveScreen: React.FC = () => {
           <Text className='text-text-secondary text-sm mt-1'>{currentUser.username}</Text>
         </View>
 
-        {/* QR Code placeholder */}
+        {/* QR Code */}
         <View className='bg-surface rounded-3xl p-6 w-full items-center'>
           <View className='w-52 h-52 bg-white rounded-2xl items-center justify-center mb-4 p-3'>
             <QRCode value={WALLET_ADDRESS} size={176} backgroundColor='white' color='#0D0E18' />
