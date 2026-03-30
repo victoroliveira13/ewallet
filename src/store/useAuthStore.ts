@@ -1,6 +1,5 @@
 import { create } from 'zustand';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import * as LocalAuthentication from 'expo-local-authentication';
 import type { User } from '../types';
 import { currentUser } from '../constants/mockData';
 
@@ -38,7 +37,7 @@ interface AuthState {
   biometricsEnabled: boolean;
   login: (email: string, password: string) => Promise<void>;
   register: (name: string, email: string, password: string) => Promise<void>;
-  logout: () => Promise<void>;
+  logout: () => void;
   restoreSession: () => Promise<void>;
   authenticateWithBiometrics: () => Promise<boolean>;
   enableBiometrics: () => Promise<void>;
@@ -51,7 +50,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   biometricsEnabled: false,
 
   login: async (email, password) => {
-    if (!EMAIL_RE.test(email)) throw new Error('E-mail inválido.');
+    if (!EMAIL_RE.test(email)) throw new Error('E-mail invalido.');
     if (password.length < 6) throw new Error('A senha deve ter pelo menos 6 caracteres.');
     const name = email
       .split('@')[0]
@@ -64,17 +63,15 @@ export const useAuthStore = create<AuthState>((set) => ({
 
   register: async (name, email, password) => {
     if (!name.trim()) throw new Error('Informe seu nome.');
-    if (!EMAIL_RE.test(email)) throw new Error('E-mail inválido.');
+    if (!EMAIL_RE.test(email)) throw new Error('E-mail invalido.');
     if (password.length < 6) throw new Error('A senha deve ter pelo menos 6 caracteres.');
     const user = buildUser(name.trim(), email.toLowerCase());
     await AsyncStorage.setItem(STORAGE_KEYS.SESSION, JSON.stringify(user));
     set({ user, isAuthenticated: true });
   },
 
-  logout: async () => {
-    // Atualiza estado imediatamente para resposta instantânea na UI
+  logout: () => {
     set({ user: currentUser, isAuthenticated: false, biometricsEnabled: false });
-    // Limpa storage em background
     AsyncStorage.multiRemove([STORAGE_KEYS.SESSION, STORAGE_KEYS.BIOMETRICS]).catch(() => {});
   },
 
@@ -89,32 +86,38 @@ export const useAuthStore = create<AuthState>((set) => ({
         set({ user, isAuthenticated: true, biometricsEnabled: bioRaw === 'true' });
       }
     } catch {
-      // session corrupted — stay logged out
+      // session corrupted
     } finally {
       set({ isLoading: false });
     }
   },
 
   authenticateWithBiometrics: async () => {
-    const compatible = await LocalAuthentication.hasHardwareAsync();
-    const enrolled = await LocalAuthentication.isEnrolledAsync();
-    if (!compatible || !enrolled) return false;
-    const result = await LocalAuthentication.authenticateAsync({
-      promptMessage: 'Entrar na carteira',
-      fallbackLabel: 'Usar senha',
-    });
-    return result.success;
+    try {
+      const LA = await import('expo-local-authentication');
+      const compatible = await LA.hasHardwareAsync();
+      const enrolled = await LA.isEnrolledAsync();
+      if (!compatible || !enrolled) return false;
+      const result = await LA.authenticateAsync({
+        promptMessage: 'Entrar na carteira',
+        fallbackLabel: 'Usar senha',
+      });
+      return result.success;
+    } catch {
+      return false;
+    }
   },
 
   enableBiometrics: async () => {
-    const hasHardware = await LocalAuthentication.hasHardwareAsync();
-    const isEnrolled = await LocalAuthentication.isEnrolledAsync();
-    if (!hasHardware || !isEnrolled) throw new Error('Biometria não disponível neste dispositivo.');
-    const result = await LocalAuthentication.authenticateAsync({
+    const LA = await import('expo-local-authentication');
+    const hasHardware = await LA.hasHardwareAsync();
+    const isEnrolled = await LA.isEnrolledAsync();
+    if (!hasHardware || !isEnrolled) throw new Error('Biometria nao disponivel neste dispositivo.');
+    const result = await LA.authenticateAsync({
       promptMessage: 'Confirme sua identidade para habilitar biometria',
       fallbackLabel: 'Usar senha',
     });
-    if (!result.success) throw new Error('Autenticação biométrica falhou.');
+    if (!result.success) throw new Error('Autenticacao biometrica falhou.');
     await AsyncStorage.setItem(STORAGE_KEYS.BIOMETRICS, 'true');
     set({ biometricsEnabled: true });
   },

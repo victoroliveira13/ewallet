@@ -16,9 +16,7 @@ const ProfileScreen: React.FC = () => {
       {
         text: 'Sair',
         style: 'destructive',
-        onPress: async () => {
-          await logout();
-        },
+        onPress: () => logout(),
       },
     ]);
 
