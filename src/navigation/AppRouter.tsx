@@ -23,6 +23,8 @@ const AppRouter: React.FC = () => {
     if (isLoading) return;
     if (!isAuthenticated) {
       navigate('/login', { replace: true });
+    } else {
+      navigate('/home', { replace: true });
     }
   }, [isAuthenticated, isLoading]);
 
