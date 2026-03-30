@@ -18,7 +18,7 @@ import { ROUTES } from '../constants/routes';
 
 const LoginScreen: React.FC = () => {
   const navigate = useNavigate();
-  const { login, authenticateWithBiometrics, biometricsEnabled } = useAuthStore();
+  const { login, authenticateWithBiometrics, biometricsEnabled, restoreSession } = useAuthStore();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -48,7 +48,11 @@ const LoginScreen: React.FC = () => {
   const handleBiometric = async () => {
     setError(null);
     const ok = await authenticateWithBiometrics();
-    if (!ok) setError('Autenticação biométrica falhou.');
+    if (ok) {
+      await restoreSession();
+    } else {
+      setError('Autenticação biométrica falhou.');
+    }
   };
 
   return (

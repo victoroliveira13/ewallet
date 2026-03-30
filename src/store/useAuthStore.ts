@@ -1,12 +1,12 @@
 import { create } from 'zustand';
-import * as SecureStore from 'expo-secure-store';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as LocalAuthentication from 'expo-local-authentication';
 import type { User } from '../types';
 import { currentUser } from '../constants/mockData';
 
-const SECURE_KEYS = {
-  SESSION: 'auth_session',
-  BIOMETRICS: 'biometrics_enabled',
+const STORAGE_KEYS = {
+  SESSION: '@ewallet/auth_session',
+  BIOMETRICS: '@ewallet/biometrics_enabled',
 } as const;
 
 const AVATAR_COLORS = ['#00D97E', '#2196F3', '#FF6B6B', '#9C27B0', '#FFB300', '#FF4757'];
@@ -58,7 +58,7 @@ export const useAuthStore = create<AuthState>((set) => ({
       .replace(/[._]/g, ' ')
       .replace(/\b\w/g, (c) => c.toUpperCase());
     const user = buildUser(name, email);
-    await SecureStore.setItemAsync(SECURE_KEYS.SESSION, JSON.stringify(user));
+    await AsyncStorage.setItem(STORAGE_KEYS.SESSION, JSON.stringify(user));
     set({ user, isAuthenticated: true });
   },
 
@@ -67,21 +67,20 @@ export const useAuthStore = create<AuthState>((set) => ({
     if (!EMAIL_RE.test(email)) throw new Error('E-mail inválido.');
     if (password.length < 6) throw new Error('A senha deve ter pelo menos 6 caracteres.');
     const user = buildUser(name.trim(), email.toLowerCase());
-    await SecureStore.setItemAsync(SECURE_KEYS.SESSION, JSON.stringify(user));
+    await AsyncStorage.setItem(STORAGE_KEYS.SESSION, JSON.stringify(user));
     set({ user, isAuthenticated: true });
   },
 
   logout: async () => {
-    await SecureStore.deleteItemAsync(SECURE_KEYS.SESSION);
-    await SecureStore.deleteItemAsync(SECURE_KEYS.BIOMETRICS);
+    await AsyncStorage.multiRemove([STORAGE_KEYS.SESSION, STORAGE_KEYS.BIOMETRICS]);
     set({ user: currentUser, isAuthenticated: false, biometricsEnabled: false });
   },
 
   restoreSession: async () => {
     try {
       const [raw, bioRaw] = await Promise.all([
-        SecureStore.getItemAsync(SECURE_KEYS.SESSION),
-        SecureStore.getItemAsync(SECURE_KEYS.BIOMETRICS),
+        AsyncStorage.getItem(STORAGE_KEYS.SESSION),
+        AsyncStorage.getItem(STORAGE_KEYS.BIOMETRICS),
       ]);
       if (raw) {
         const user: User = JSON.parse(raw);
@@ -114,7 +113,7 @@ export const useAuthStore = create<AuthState>((set) => ({
       fallbackLabel: 'Usar senha',
     });
     if (!result.success) throw new Error('Autenticação biométrica falhou.');
-    await SecureStore.setItemAsync(SECURE_KEYS.BIOMETRICS, 'true');
+    await AsyncStorage.setItem(STORAGE_KEYS.BIOMETRICS, 'true');
     set({ biometricsEnabled: true });
   },
 }));
