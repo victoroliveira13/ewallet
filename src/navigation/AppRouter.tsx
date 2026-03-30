@@ -2,6 +2,7 @@ import React from 'react';
 import { View } from 'react-native';
 import { Route, Routes, Navigate } from 'react-router-native';
 import { BottomNavBar } from '../components/BottomNavBar';
+import { PushNotificationProvider } from '../components/PushNotificationProvider';
 import HomeScreen from '../screens/HomeScreen';
 import SendScreen from '../screens/SendScreen';
 import ReceiveScreen from '../screens/ReceiveScreen';
@@ -12,6 +13,9 @@ import NotificationsScreen from '../screens/NotificationsScreen';
 const AppRouter: React.FC = () => {
   return (
     <View className='flex-1 bg-background'>
+      {/* Inicializa push notifications (precisa estar dentro do NativeRouter) */}
+      <PushNotificationProvider />
+
       {/* Main content area */}
       <View className='flex-1'>
         <Routes>
